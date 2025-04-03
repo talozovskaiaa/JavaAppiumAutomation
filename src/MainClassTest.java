@@ -4,12 +4,11 @@ import org.junit.Test;
 
 public class MainClassTest {
     @Test
-    public void testGetLocalNumber() {
+    public void testGetClassNumber() {
         MainClass mainClass = new MainClass();
 
-        int actualResult = mainClass.getLocalNumber();
-        int expectedResult = 14;
+        int actualResult = mainClass.getClassNumber();
 
-        Assert.assertTrue("Метод getLocalNumber должен возвращать число 14", actualResult == expectedResult);
+        Assert.assertTrue("Метод getClassNumber должен возвращать число больше 45", actualResult > 45);
     }
 }
