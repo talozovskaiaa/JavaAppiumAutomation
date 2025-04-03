@@ -8,7 +8,7 @@ public class MainClassTest {
         MainClass mainClass = new MainClass();
 
         int actualResult = mainClass.getLocalNumber();
-        int expectedResult = 14;
+        int expectedResult = 15;
 
         Assert.assertTrue("Метод getLocalNumber должен возвращать число 14", actualResult == expectedResult);
     }
