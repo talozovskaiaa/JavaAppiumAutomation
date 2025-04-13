@@ -16,5 +16,6 @@ public class MainClassTest {
         boolean containsHello = strResult.contains("Hello") || strResult.contains("hello");
 
         Assert.assertTrue("Строка должна содержать Hello или hello", containsHello);
+
     }
 }
