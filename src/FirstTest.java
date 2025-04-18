@@ -192,7 +192,7 @@ public class FirstTest {
 //            element.clear();
 //            return element;
 //        }
-// Тема 3, ДЗ 1
+// Тема 3, ДЗ N 1
         private WebElement assertElementHasText(By by, String value, String error_message)
         {
             WebElement element = waitForElementPresent(by, error_message);
