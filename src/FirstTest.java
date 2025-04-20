@@ -38,7 +38,7 @@ public class FirstTest {
             driver.quit();
         }
 
-//        @Test
+//        @Test // Тест на поиск названия поисковой строки
 //        public void FirstTest()
 //        {
 //            waitForElementAndClick(
@@ -61,7 +61,7 @@ public class FirstTest {
 //            );
 //        }
 //
-//        @Test
+//        @Test // Тест по очистке введенного слова и возращения назад
 //        public void testCancelSearch()
 //        {
 //            waitForElementAndClick(
@@ -96,7 +96,7 @@ public class FirstTest {
 //            );
 //        }
 //
-//        @Test
+//        @Test // Тест на открытие статьи
 //        public void testCompareArticelTitle()
 //        {
 //            waitForElementAndClick(
@@ -133,9 +133,27 @@ public class FirstTest {
 //            );
 //        }
 //
-// Тема 3, ДЗ 1
+//// Тема 3, ДЗ 1
+//        @Test
+//        public void article_has_test()
+//        {
+//            waitForElementAndClick(
+//                    By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+//                    "Cannot find Search Wikipedia input",
+//                    5
+//            );
+//
+//            assertElementHasText(
+//                    By.xpath("//*[contains(@text,'Search…')]"),
+//                    "",
+//                    "Cannot find search input"
+//            );
+//
+//        }
+
+// Тема 3, ДЗ 2
         @Test
-        public void article_has_test()
+        public void cancel_search()
         {
             waitForElementAndClick(
                     By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -143,10 +161,35 @@ public class FirstTest {
                     5
             );
 
-            assertElementHasText(
+            waitForElementAndSendKeys(
                     By.xpath("//*[contains(@text,'Search…')]"),
-                    "",
-                    "Cannot find search input"
+                    "Russia",
+                    "Cannot find search input",
+                    15
+            );
+
+            waitForElementPresent(
+                    By.xpath("//*[contains(@text,'Country in Eastern Europe and Northern Asia')]"),
+                    "Cannot find 'Country in Eastern Europe' input",
+                    5
+            );
+
+            waitForElementPresent(
+                    By.xpath("//*[contains(@text,'East Slavic language')]"),
+                    "Cannot find 'East Slavic language' input",
+                    5
+            );
+
+            waitForElementAndClear(
+                    By.id("org.wikipedia:id/search_src_text"),
+                    "Cannot find search clear",
+                    5
+            );
+
+            waitForElementNotPresent(
+                    By.xpath("//*[contains(@text,'Country in Eastern Europe and Northern Asia')]"),
+                    "X is still present on the page",
+                    10
             );
         }
 
@@ -170,28 +213,28 @@ public class FirstTest {
           return element;
         }
 
-//        private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeOutInSecond)
-//        {
-//            WebElement element = waitForElementPresent(by, error_message, timeOutInSecond);
-//            element.sendKeys(value);
-//            return element;
-//        }
+        private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeOutInSecond)
+        {
+            WebElement element = waitForElementPresent(by, error_message, timeOutInSecond);
+            element.sendKeys(value);
+            return element;
+        }
 
-//         private boolean waitForElementNotPresent(By by, String error_message, long timeOutInSecond)
-//        {
-//            WebDriverWait wait = new WebDriverWait(driver, timeOutInSecond);
-//            wait.withMessage(error_message + "\n");
-//            return wait.until(
-//                ExpectedConditions.invisibilityOfElementLocated(by)
-//            );
-//        }
+         private boolean waitForElementNotPresent(By by, String error_message, long timeOutInSecond)
+        {
+            WebDriverWait wait = new WebDriverWait(driver, timeOutInSecond);
+            wait.withMessage(error_message + "\n");
+            return wait.until(
+                ExpectedConditions.invisibilityOfElementLocated(by)
+            );
+        }
 
-//        private WebElement waitForElementAndClear(By by, String error_message, long timeOutInSecond)
-//        {
-//            WebElement element = waitForElementPresent(by, error_message, timeOutInSecond);
-//            element.clear();
-//            return element;
-//        }
+        private WebElement waitForElementAndClear(By by, String error_message, long timeOutInSecond)
+        {
+            WebElement element = waitForElementPresent(by, error_message, timeOutInSecond);
+            element.clear();
+            return element;
+        }
 // Тема 3, ДЗ N 1
         private WebElement assertElementHasText(By by, String value, String error_message)
         {
