@@ -1,4 +1,5 @@
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.touch.WaitOptions;
@@ -22,32 +23,31 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class FirstTest {
 
-        private AppiumDriver driver;
+    private AppiumDriver driver;
 
-        @Before
-        public void setUp() throws Exception
-        {
-            DesiredCapabilities capabilities = new DesiredCapabilities();
+    @Before
+    public void setUp() throws Exception {
+        DesiredCapabilities capabilities = new DesiredCapabilities();
 
-            capabilities.setCapability("platformName", "Android");
-            capabilities.setCapability("deviceName", "AndroidTestDevice");
-            capabilities.setCapability("platformVersion", "8.1");
-            capabilities.setCapability("automationName", "UiAutomator2");
-            capabilities.setCapability("appPackage", "org.wikipedia");
-            capabilities.setCapability("appActivity", ".main.MainActivity");
-            capabilities.setCapability("app", "/Users/tanya/Desktop/JavaAppiumAutomatoin/JavaAppiumAutomation/apks/Wikipedia.apk");
+        capabilities.setCapability("platformName", "Android");
+        capabilities.setCapability("deviceName", "AndroidTestDevice");
+        capabilities.setCapability("platformVersion", "8.1");
+        capabilities.setCapability("automationName", "UiAutomator2");
+        capabilities.setCapability("appPackage", "org.wikipedia");
+        capabilities.setCapability("appActivity", ".main.MainActivity");
+        capabilities.setCapability("app", "/Users/tanya/Desktop/JavaAppiumAutomatoin/JavaAppiumAutomation/apks/Wikipedia.apk");
 
-            driver = new AndroidDriver(new URL ("http://127.0.0.1:4723"), capabilities);
-        }
+        driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), capabilities);
+    }
 
-        @After
-        public void tearDown()
-        {
-            driver.quit();
-        }
+    @After
+    public void tearDown() {
+        driver.quit();
+    }
 
 //        @Test // Тест на поиск названия поисковой строки
 //        public void FirstTest()
@@ -472,7 +472,8 @@ public class FirstTest {
 //
 //        }
 //
-//// Тема 3, ДЗ 2
+
+    /// / Тема 3, ДЗ 2
 //        @Test
 //        public void cancel_search()
 //        {
@@ -515,9 +516,122 @@ public class FirstTest {
 //        }
 
     // Тема 4, ДЗ 1
-    @Test // Создание папки сохраненных, добавление и удаление статьи
-    public void saveToArticleToMyList()
-    {
+//    @Test // Создание папки сохраненных, добавление и удаление статьи
+//    public void saveToArticleToMyList()
+//    {
+//        waitForElementAndClick(
+//                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+//                "Cannot find Onbording",
+//                5
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+//                "Cannot find Search Wikipedia input",
+//                5
+//        );
+//
+//        waitForElementAndSendKeys(
+//                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+//                "Java",
+//                "Cannot find search input",
+//                5
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+//                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
+//                15
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text,'Save')]"),
+//                "Cannot find Save",
+//                5
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text,'Add to list')]"),
+//                "Cannot find Add to list",
+//                5
+//        );
+//
+//        waitForElementAndSendKeys(
+//                By.xpath("//*[contains(@text,'Name of this list')]"),
+//                "New create list",
+//                "Cannot put text into article folder input",
+//                5
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text,'OK')]"),
+//                "Cannot press OK button",
+//                5
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"), //локатор на кнопку назад
+//                "Cannot Navigate up",
+//                5
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text,'High-level programming language')]"), // локатор на другую статью
+//                "Cannot find article 'High-level programming language'",
+//                5
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text,'Save')]"), // не менять, локатор на save
+//                "Cannot find Save",
+//                5
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text,'Add to list')]"), // не менять, переходим в новый лист
+//                "Cannot find Add to list",
+//                5
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text,'New create list')]"), // выбрать локатор созданного списка
+//                "Cannot find Save",
+//                5
+//        );
+//
+//        waitForElementAndClick(
+//                By.id("org.wikipedia:id/snackbar_action"), // локатор на View List
+//                "Cannot press snackbar_action",
+//                5
+//        );
+//
+//        swipeElementToLeft(
+//                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+//                "Cannot swipe up"
+//        );
+//
+//        waitForElementPresent(
+//                By.xpath("//*[contains(@text,'High-level programming language')]"), // проверить 2ую статью
+//                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
+//                15
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text,'High-level programming language')]"), // локатор на другую статью
+//                "Cannot press OK button",
+//                5
+//        );
+//
+//        waitForElementPresent(
+//                By.xpath("(//*[contains(@content-desc, 'JavaScript')])[1]"), // проверить title
+//                "Cannot find content-desc, 'JavaScript'",
+//                15
+//        );
+//    }
+
+// Тема 4 ДЗ 2
+    @Test // Тест на проверку title
+    public void assertElementPresent() {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "Cannot find Onbording",
@@ -530,11 +644,12 @@ public class FirstTest {
                 5
         );
 
+        String search_line = "Java";
         waitForElementAndSendKeys(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "Java",
+                search_line,
                 "Cannot find search input",
-                5
+                10
         );
 
         waitForElementAndClick(
@@ -543,144 +658,58 @@ public class FirstTest {
                 15
         );
 
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Save')]"),
-                "Cannot find Save",
-                5
-        );
+        By title_locator = By.xpath("//android.view.View[@content-desc='Java (programming language)']");
+        assertElementPresent(title_locator);
 
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Add to list')]"),
-                "Cannot find Add to list",
-                5
-        );
-
-        waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text,'Name of this list')]"),
-                "New create list",
-                "Cannot put text into article folder input",
-                5
-        );
-
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text,'OK')]"),
-                "Cannot press OK button",
-                5
-        );
-
-        waitForElementAndClick(
-                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"), //локатор на кнопку назад
-                "Cannot Navigate up",
-                5
-        );
-
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text,'High-level programming language')]"), // локатор на другую статью
-                "Cannot find article 'High-level programming language'",
-                5
-        );
-
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Save')]"), // не менять, локатор на save
-                "Cannot find Save",
-                5
-        );
-
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Add to list')]"), // не менять, переходим в новый лист
-                "Cannot find Add to list",
-                5
-        );
-
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text,'New create list')]"), // выбрать локатор созданного списка
-                "Cannot find Save",
-                5
-        );
-
-        waitForElementAndClick(
-                By.id("org.wikipedia:id/snackbar_action"), // локатор на View List
-                "Cannot press snackbar_action",
-                5
-        );
-
-        swipeElementToLeft(
-                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
-                "Cannot swipe up"
-        );
-
-        waitForElementPresent(
-                By.xpath("//*[contains(@text,'High-level programming language')]"), // проверить 2ую статью
-                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
-                15
-        );
-
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text,'High-level programming language')]"), // локатор на другую статью
-                "Cannot press OK button",
-                5
-        );
-
-        waitForElementPresent(
-                By.xpath("(//*[contains(@content-desc, 'JavaScript')])[1]"), // проверить title
-                "Cannot find content-desc, 'JavaScript'",
-                15
-        );
     }
 
 
-        private WebElement waitForElementPresent(By by, String error_message, long timeoutIntSeconds)
-        {
-            WebDriverWait wait = new WebDriverWait(driver, timeoutIntSeconds);
-            wait.withMessage(error_message + "\n");
-            return wait.until(
-                    ExpectedConditions.presenceOfElementLocated(by)
-            );
-        }
-        private WebElement waitForElementPresent(By by, String error_message)
-        {
+    private WebElement waitForElementPresent(By by, String error_message, long timeoutIntSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutIntSeconds);
+        wait.withMessage(error_message + "\n");
+        return wait.until(
+                ExpectedConditions.presenceOfElementLocated(by)
+        );
+    }
+
+    private WebElement waitForElementPresent(By by, String error_message) {
         return waitForElementPresent(by, error_message, 5);
-        }
+    }
 
-        private WebElement waitForElementAndClick(By by, String error_message, long timeOutInSecond)
-        {
-          WebElement element = waitForElementPresent(by, error_message, timeOutInSecond);
-          element.click();
-          return element;
-        }
+    private WebElement waitForElementAndClick(By by, String error_message, long timeOutInSecond) {
+        WebElement element = waitForElementPresent(by, error_message, timeOutInSecond);
+        element.click();
+        return element;
+    }
 
-        private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeOutInSecond)
-        {
-            WebElement element = waitForElementPresent(by, error_message, timeOutInSecond);
-            element.sendKeys(value);
-            return element;
-        }
+    private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeOutInSecond) {
+        WebElement element = waitForElementPresent(by, error_message, timeOutInSecond);
+        element.sendKeys(value);
+        return element;
+    }
 
-         private boolean waitForElementNotPresent(By by, String error_message, long timeOutInSecond)
-        {
-            WebDriverWait wait = new WebDriverWait(driver, timeOutInSecond);
-            wait.withMessage(error_message + "\n");
-            return wait.until(
+    private boolean waitForElementNotPresent(By by, String error_message, long timeOutInSecond) {
+        WebDriverWait wait = new WebDriverWait(driver, timeOutInSecond);
+        wait.withMessage(error_message + "\n");
+        return wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(by)
-            );
-        }
+        );
+    }
 
-        private WebElement waitForElementAndClear(By by, String error_message, long timeOutInSecond)
-        {
-            WebElement element = waitForElementPresent(by, error_message, timeOutInSecond);
-            element.clear();
-            return element;
-        }
-// Тема 3, ДЗ N 1
-        private WebElement assertElementHasText(By by, String value, String error_message)
-        {
-            WebElement element = waitForElementPresent(by, error_message);
-            element.sendKeys(value);
-            return element;
-        }
+    private WebElement waitForElementAndClear(By by, String error_message, long timeOutInSecond) {
+        WebElement element = waitForElementPresent(by, error_message, timeOutInSecond);
+        element.clear();
+        return element;
+    }
 
-    protected void swipeUp(int timeOfSwipe)
-    {
+    // Тема 3, ДЗ N 1
+    private WebElement assertElementHasText(By by, String value, String error_message) {
+        WebElement element = waitForElementPresent(by, error_message);
+        element.sendKeys(value);
+        return element;
+    }
+
+    protected void swipeUp(int timeOfSwipe) {
         TouchAction action = new TouchAction(driver);
         Dimension size = driver.manage().window().getSize();
         int x = size.width / 2;
@@ -723,16 +752,14 @@ public class FirstTest {
         }
     }
 
-    protected void swipeUpQuick()
-    {
+    protected void swipeUpQuick() {
         swipeUp1(200);
     }
-    protected void swipeUpToFindElement (By by, String error_message, int max_swipes)
-    {
+
+    protected void swipeUpToFindElement(By by, String error_message, int max_swipes) {
         int already_swiped = 0;
-        while (driver.findElements(by).size() == 0)
-        {
-            if(already_swiped > max_swipes){
+        while (driver.findElements(by).size() == 0) {
+            if (already_swiped > max_swipes) {
                 waitForElementPresent(by, "Cannot find element by swiping up. \n" + error_message, 0);
                 return;
             }
@@ -769,8 +796,7 @@ public class FirstTest {
         }
     }
 
-    private int getAmountOfElements(By by)
-    {
+    private int getAmountOfElements(By by) {
         List elements = driver.findElements(by);
         return elements.size();
     }
@@ -790,8 +816,7 @@ public class FirstTest {
         }
     }
 
-    private void assertElementNotPresent(By by, String error_message)
-    {
+    private void assertElementNotPresent(By by, String error_message) {
         int amount_of_elements = getAmountOfElements1(by);
         if (amount_of_elements > 0) {
             String default_message = "An element '" + by.toString() + "'supposed to be not present";
@@ -799,10 +824,17 @@ public class FirstTest {
         }
     }
 
-    private String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSecond)
-    {
+    private String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSecond) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSecond);
         return element.getAttribute(attribute);
     }
 
+    //Тема 3, ДЗ 2
+    private void assertElementPresent(By by) {
+        try {
+            WebElement element = driver.findElement(by);
+        } catch (Exception e) {
+            throw new AssertionError("Элемент не найден: " + by.toString(), e);
+        }
+    }
 }
