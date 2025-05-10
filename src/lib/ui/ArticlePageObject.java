@@ -1,19 +1,18 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class ArticlePageObject extends MainPageObject
 {
     private static final String
-            TITLE = "org.wikipedia:id/page_contents_container",
-            FOOTER_ELEMENT = "//android.view.View[@content-desc='View article in browser']",
-            SAVE_BUTTON = "//*[contains(@text,'Save')]",
-            ADD_TO_LIST = "//*[contains(@text,'Add to list')]",
-            MY_LIST_NAME_INPUT = "//*[contains(@text,'Name of this list')]",
-            MY_LIST_OK_BUTTON = "//*[contains(@text,'OK')]",
-            MY_EXISTING_LIST= "//*[contains(@text,'{LIST_NAME}')]";
+            TITLE = "id:org.wikipedia:id/page_contents_container",
+            FOOTER_ELEMENT = "xpath://android.view.View[@content-desc='View article in browser']",
+            SAVE_BUTTON = "xpath://*[contains(@text,'Save')]",
+            ADD_TO_LIST = "xpath://*[contains(@text,'Add to list')]",
+            MY_LIST_NAME_INPUT = "xpath://*[contains(@text,'Name of this list')]",
+            MY_LIST_OK_BUTTON = "xpath://*[contains(@text,'OK')]",
+            MY_EXISTING_LIST= "xpath://*[contains(@text,'{LIST_NAME}')]";
 
 
     public ArticlePageObject(AppiumDriver driver)
@@ -30,7 +29,7 @@ public class ArticlePageObject extends MainPageObject
 
     public WebElement waitForTitleElement()
     {
-        return this.waitForElementPresent(By.id(TITLE), "Cannot find article on page", 15);
+        return this.waitForElementPresent(TITLE, "Cannot find article on page", 15);
     }
 
     public String getArticleTitle()
@@ -42,7 +41,7 @@ public class ArticlePageObject extends MainPageObject
     public void swipeToFooter()
     {
         this.swipeUpToFindElement(
-                By.xpath(FOOTER_ELEMENT),
+                FOOTER_ELEMENT,
                 "Cannot find the end of article",
                 20
 
@@ -52,26 +51,26 @@ public class ArticlePageObject extends MainPageObject
     public void arcticleToMyList(String name_of_folder)
     {
         this.waitForElementAndClick(
-                By.xpath(SAVE_BUTTON),
+                SAVE_BUTTON,
                 "Cannot find Save",
                 5
         );
 
         this.waitForElementAndClick(
-                By.xpath(ADD_TO_LIST),
+                ADD_TO_LIST,
                 "Cannot find Add to list",
                 5
         );
 
         this.waitForElementAndSendKeys(
-                By.xpath(MY_LIST_NAME_INPUT),
+                MY_LIST_NAME_INPUT,
                 name_of_folder,
                 "Cannot put text into article folder input",
                 5
         );
 
         this.waitForElementAndClick(
-                By.xpath(MY_LIST_OK_BUTTON),
+                MY_LIST_OK_BUTTON,
                 "Cannot press OK button",
                 5
         );
@@ -80,20 +79,20 @@ public class ArticlePageObject extends MainPageObject
     public void articleToExistingList(String name_of_folder)
     {
         this.waitForElementAndClick(
-                By.xpath(SAVE_BUTTON),
+                SAVE_BUTTON,
                 "Cannot find Save",
                 5
         );
 
         this.waitForElementAndClick(
-                By.xpath(ADD_TO_LIST),
+                ADD_TO_LIST,
                 "Cannot find Add to list",
                 5
         );
 
         String existing_list = getExistingListElement(name_of_folder);
         this.waitForElementAndClick(
-                By.xpath(existing_list),
+                existing_list,
                 "Cannot find 'New create list'",
                 5
         );

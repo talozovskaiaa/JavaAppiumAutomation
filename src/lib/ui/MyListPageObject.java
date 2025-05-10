@@ -1,13 +1,12 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
 
 public class MyListPageObject extends MainPageObject {
 
     public static final String
-            XPATHELEMENT = "//*[contains(@text,'Object-oriented programming language')]",
-            ARTICLE_BY_TITLE_TMP = "//*[contains(@text,'{TITLE}')]";
+            XPATHELEMENT = "xpath://*[contains(@text,'Object-oriented programming language')]",
+            ARTICLE_BY_TITLE_TMP = "xpath://*[contains(@text,'{TITLE}')]";
 
     /* TEMPLATES METHODS */
     private static String getSaveArticleXpathByArticle(String article_title) {
@@ -24,7 +23,7 @@ public class MyListPageObject extends MainPageObject {
     public void HasElement()
     {
         this.waitForElementPresent(
-                By.xpath(XPATHELEMENT),
+                XPATHELEMENT,
                 "Cannot find element",
                 15
         );
@@ -34,7 +33,7 @@ public class MyListPageObject extends MainPageObject {
     {
         String article_xpath = getSaveArticleXpathByArticle(article_title);
         this.waitForElementPresent(
-                By.xpath(article_xpath),
+                article_xpath,
                 "Cannot find article by title" + article_title,
                 15
         );
@@ -44,7 +43,7 @@ public class MyListPageObject extends MainPageObject {
     {
         String article_xpath = getSaveArticleXpathByArticle(article_title);
         this.waitForElementNotPresent(
-                By.xpath(article_xpath),
+                article_xpath,
                 "Saved article still" + article_title,
                 15
         );
@@ -59,7 +58,7 @@ public class MyListPageObject extends MainPageObject {
         System.out.println("Generated XPath: " + article_xpath);
 
         this.waitForArticleToAppearByTitle(article_title); // Передаем текст, а не XPath
-        this.swipeElementToLeft(By.xpath(article_xpath), "Cannot swipe up");
+        this.swipeElementToLeft(article_xpath, "Cannot swipe up");
         this.waitForArticleToDisappearByTitle(article_title);
     }
 }
