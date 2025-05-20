@@ -1,14 +1,21 @@
-package tests.IOS;
+package tests;
 
-import lib.IOSTestCase;
+import lib.CoreTestCase;
+import lib.Platform;
 import lib.ui.WelcomPageObject;
 import org.junit.Test;
 
-public class GetStartedTests extends IOSTestCase {
+import java.lang.foreign.PaddingLayout;
+
+public class GetStartedTests extends CoreTestCase {
 
     @Test
     public void testPassThroughWelcome()
     {
+        if (Platform.getInstance().isAndroid()) {
+            return;
+        }
+
         WelcomPageObject WelcomPage = new WelcomPageObject(driver);
 
         WelcomPage.waitForLearnMoreLink();

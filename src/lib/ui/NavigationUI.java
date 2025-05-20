@@ -2,11 +2,12 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 
-public class NavigationUI extends MainPageObject {
+abstract public class NavigationUI extends MainPageObject {
 
-    private static final String
-            SNACKBAR_ACTION = "id:org.wikipedia:id/snackbar_action",
-            BACK_BUTTON = "xpath://android.widget.ImageButton[@content-desc='Navigate up']";
+    protected static String
+            SNACKBAR_ACTION,
+            BACK_BUTTON;
+
 
     public NavigationUI(AppiumDriver driver)
     {
@@ -18,7 +19,7 @@ public class NavigationUI extends MainPageObject {
         this.waitForElementAndClick(
                 SNACKBAR_ACTION,
                 "Cannot press snackbar_action",
-                7
+                5
         );
     }
 

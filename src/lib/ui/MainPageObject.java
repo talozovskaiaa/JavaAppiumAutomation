@@ -4,6 +4,7 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
@@ -16,13 +17,13 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+import lib.Platform;
 
 public class MainPageObject {
 
     protected AppiumDriver driver;
 
-    public MainPageObject(AppiumDriver driver)
-    {
+    public MainPageObject(AppiumDriver driver) {
         this.driver = driver;
     }
 
@@ -97,20 +98,40 @@ public class MainPageObject {
                 throw new RuntimeException("Unable to get screen size");
             }
 
-            int x = size.width / 2;
-            int start_y = (int) (size.height * 0.8);
-            int end_y = (int) (size.height * 0.2);
+            System.out.println("Screen size: " + size);
 
+            if (Platform.getInstance().isAndroid()) {
+                // Свайп вверх для Android
+                int x = size.width / 2;
+                int start_y = (int) (size.height * 0.8);
+                int end_y = (int) (size.height * 0.2);
 
-            PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
-            Sequence swipe = new Sequence(finger, 1)
-                    .addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), x, start_y))
-                    .addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()))
-                    .addAction(finger.createPointerMove(Duration.ofMillis(timeOfSwipe), PointerInput.Origin.viewport(), x, end_y))
-                    .addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence swipe = new Sequence(finger, 1)
+                        .addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), x, start_y))
+                        .addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()))
+                        .addAction(finger.createPointerMove(Duration.ofMillis(timeOfSwipe), PointerInput.Origin.viewport(), x, end_y))
+                        .addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
 
+                driver.perform(Collections.singletonList(swipe));
+            } else if (Platform.getInstance().isIOS()) {
 
-            driver.perform(Collections.singletonList(swipe));
+                int left_x = 20;
+                int right_x = 131;
+                int middle_y = 118;
+
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+
+                Sequence swipe = new Sequence(finger, 1)
+                        .addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), left_x, middle_y)) // Начало свайпа
+                        .addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg())) // Нажатие
+                        .addAction(finger.createPointerMove(Duration.ofMillis(500), PointerInput.Origin.viewport(), right_x, middle_y)) // Движение вправо
+                        .addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg())); // Отпускание
+
+                driver.perform(Collections.singletonList(swipe));
+            } else {
+                throw new RuntimeException("Unsupported platform");
+            }
         } catch (Exception e) {
             throw new RuntimeException("Failed to perform swipe action", e);
         }
@@ -132,6 +153,53 @@ public class MainPageObject {
             swipeUpQuick();
             ++already_swiped;
         }
+    }
+
+    public void swipeUpTillElementAppear(String locator, String error_message, int max_swipes)
+    {
+        int already_swiped = 0;
+
+        while (!this.isElementLocatedOnTheScreen(locator))
+        {
+            if (already_swiped > max_swipes) {
+                Assert.assertTrue(error_message, this.isElementLocatedOnTheScreen(locator));
+            }
+
+            swipeUpQuick();
+            ++already_swiped;
+        }
+    }
+
+    public boolean isElementLocatedOnTheScreen(String locator)
+    {
+        int element_location_by_y = this.waitForElementPresent(locator, "Cannot find element by locator", 5).getLocation().getY();
+        int screen_size_by_y = driver.manage().window().getSize().getHeight();
+        return element_location_by_y < screen_size_by_y;
+    }
+
+    public void clickElementInTheRightUpperCorner(String locator, String error_message) {
+
+        WebElement element = this.waitForElementPresent(locator + "/..", error_message);
+
+        int left_x = element.getLocation().getX();
+        int upper_y = element.getLocation().getY();
+        int width = element.getSize().getWidth();
+        int height = element.getSize().getHeight();
+
+        int right_x = left_x + width; // Правая граница элемента
+        int middle_y = upper_y + (height / 2); // Середина по вертикали
+
+
+        int point_to_click_x = right_x - 3;
+        int point_to_click_y = middle_y;
+
+        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+        Sequence tap = new Sequence(finger, 1)
+                .addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), point_to_click_x, point_to_click_y))
+                .addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()))
+                .addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+
+        driver.perform(Collections.singletonList(tap));
     }
 
     public void swipeElementToLeft(String locator, String error_message) {
@@ -159,16 +227,26 @@ public class MainPageObject {
                 throw new RuntimeException("Element has invalid size or position");
             }
 
-            // Выполняем свайп влево
-            PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
-            Sequence swipe = new Sequence(finger, 1)
-                    .addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), right_x, middle_y))
-                    .addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()))
-                    .addAction(finger.createPointerMove(Duration.ofMillis(1000), PointerInput.Origin.viewport(), left_x, middle_y))
-                    .addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+            if (Platform.getInstance().isAndroid()) {
+                // Выполняем свайп влево
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence swipe = new Sequence(finger, 1)
+                        .addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), right_x, middle_y))
+                        .addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()))
+                        .addAction(finger.createPointerMove(Duration.ofMillis(1000), PointerInput.Origin.viewport(), left_x, middle_y))
+                        .addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
 
-            driver.perform(Collections.singletonList(swipe));
+                driver.perform(Collections.singletonList(swipe));
+            } else {
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence swipe = new Sequence(finger, 1)
+                        .addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), right_x, middle_y)) // Начальная точка
+                        .addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg())) // Нажатие
+                        .addAction(finger.createPointerMove(Duration.ofMillis(500), PointerInput.Origin.viewport(), left_x, middle_y)) // Движение влево
+                        .addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg())); // Отпускание
 
+                driver.perform(Collections.singletonList(swipe));
+            }
             // Ждем исчезновения элемента
             Thread.sleep(500); // Дополнительное ожидание
         } catch (Exception e) {

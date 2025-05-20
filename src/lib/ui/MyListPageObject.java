@@ -1,12 +1,14 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 
-public class MyListPageObject extends MainPageObject {
 
-    public static final String
-            XPATHELEMENT = "xpath://*[contains(@text,'Object-oriented programming language')]",
-            ARTICLE_BY_TITLE_TMP = "xpath://*[contains(@text,'{TITLE}')]";
+abstract public class MyListPageObject extends MainPageObject {
+
+    protected static String
+            XPATHELEMENT,
+            ARTICLE_BY_TITLE_TMP;
 
     /* TEMPLATES METHODS */
     private static String getSaveArticleXpathByArticle(String article_title) {
@@ -25,7 +27,7 @@ public class MyListPageObject extends MainPageObject {
         this.waitForElementPresent(
                 XPATHELEMENT,
                 "Cannot find element",
-                15
+                2
         );
     }
 
@@ -44,8 +46,8 @@ public class MyListPageObject extends MainPageObject {
         String article_xpath = getSaveArticleXpathByArticle(article_title);
         this.waitForElementNotPresent(
                 article_xpath,
-                "Saved article still" + article_title,
-                15
+                "Saved article still " + article_title,
+                3
         );
     }
 
@@ -54,11 +56,53 @@ public class MyListPageObject extends MainPageObject {
             throw new IllegalArgumentException("Article title cannot be null or empty");
         }
 
+        this.waitForArticleToAppearByTitle(article_title); // Передаем текст, а не XPath
         String article_xpath = getSaveArticleXpathByArticle(article_title);
         System.out.println("Generated XPath: " + article_xpath);
 
-        this.waitForArticleToAppearByTitle(article_title); // Передаем текст, а не XPath
-        this.swipeElementToLeft(article_xpath, "Cannot swipe up");
+        try {
+            this.swipeElementToLeft(article_xpath, "Cannot swipe left on article with title: " + article_title);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to perform swipe action on article with title: " + article_title, e);
+        }
+
+        if (Platform.getInstance().isIOS()) {
+            try {
+                this.clickElementInTheRightUpperCorner(article_xpath, "Cannot find saved article with title: " + article_title);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to click element in the right upper corner for iOS", e);
+            }
+        }
+
         this.waitForArticleToDisappearByTitle(article_title);
+    }
+
+    public void swipeByArticleToDeleteForIOS(String article_title) {
+        if (article_title == null || article_title.isEmpty()) {
+            throw new IllegalArgumentException("Article title cannot be null or empty");
+        }
+
+        this.waitForArticleToAppearByTitle(article_title); // Передаем текст, а не XPath
+        String article_xpath = getSaveArticleXpathByArticle(article_title);
+        System.out.println("Generated XPath: " + article_xpath);
+
+        try {
+            this.swipeElementToLeft(article_xpath, "Cannot swipe left on article with title: " + article_title);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to perform swipe action on article with title: " + article_title, e);
+        }
+
+        if (Platform.getInstance().isIOS()) {
+            try {
+                this.clickElementInTheRightUpperCorner(article_xpath, "Cannot find saved article with title: " + article_title);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to click element in the right upper corner for iOS", e);
+            }
+        }
+    }
+
+    public void hasFootersTextByArticle()
+    {
+        this.swipeUpToFindElement("//XCUIElementTypeStaticText[@name='компьютерная игра 2016 года']", "cannot find footer's text", 40);
     }
 }

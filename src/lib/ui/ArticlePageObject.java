@@ -1,18 +1,24 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.WebElement;
 
-public class ArticlePageObject extends MainPageObject
+import static tests.MyListsTests.name_of_folder;
+
+abstract public class ArticlePageObject extends MainPageObject
 {
-    private static final String
-            TITLE = "id:org.wikipedia:id/page_contents_container",
-            FOOTER_ELEMENT = "xpath://android.view.View[@content-desc='View article in browser']",
-            SAVE_BUTTON = "xpath://*[contains(@text,'Save')]",
-            ADD_TO_LIST = "xpath://*[contains(@text,'Add to list')]",
-            MY_LIST_NAME_INPUT = "xpath://*[contains(@text,'Name of this list')]",
-            MY_LIST_OK_BUTTON = "xpath://*[contains(@text,'OK')]",
-            MY_EXISTING_LIST= "xpath://*[contains(@text,'{LIST_NAME}')]";
+    protected static String
+            TITLE,
+            FOOTER_ELEMENT,
+            SAVE_BUTTON,
+            ADD_TO_LIST,
+            ADD_NEW_LIST,
+            MY_LIST_NAME_INPUT,
+            MY_LIST_OK_BUTTON,
+            MY_EXISTING_LIST,
+            CLOSE,
+            LATER;
 
 
     public ArticlePageObject(AppiumDriver driver)
@@ -35,17 +41,27 @@ public class ArticlePageObject extends MainPageObject
     public String getArticleTitle()
     {
         WebElement title_element = waitForTitleElement();
-        return title_element.getAttribute("text");
+        if (Platform.getInstance().isAndroid()) {
+            return title_element.getAttribute("text");
+        } else {
+            return title_element.getAttribute("name");
+        }
     }
 
     public void swipeToFooter()
     {
-        this.swipeUpToFindElement(
-                FOOTER_ELEMENT,
+        if (Platform.getInstance().isAndroid()) {
+            this.swipeUpToFindElement(
+                    FOOTER_ELEMENT,
+                    "Cannot find the end of article",
+                    40
+            );
+        } else {
+            this.swipeUpTillElementAppear(FOOTER_ELEMENT,
                 "Cannot find the end of article",
-                20
-
-        );
+                40
+            );
+        }
     }
 
     public void arcticleToMyList(String name_of_folder)
@@ -96,5 +112,45 @@ public class ArticlePageObject extends MainPageObject
                 "Cannot find 'New create list'",
                 5
         );
+    }
+
+    public void addArticleToNySaved(String name_of_folder)
+    {
+        this.waitForElementAndClick(
+                SAVE_BUTTON,
+                "Cannot find Save",
+                5
+        );
+
+        this.waitForElementAndClick(
+                ADD_TO_LIST,
+                "Cannot find option to add article to reading list",
+                5
+        );
+
+        this.waitForElementAndClick(
+                ADD_NEW_LIST,
+                "Cannot find button 'Add new list'",
+                5
+        );
+
+        this.waitForElementAndSendKeys(
+                MY_LIST_NAME_INPUT,
+                name_of_folder,
+                "Cannot put text into article folder input",
+                5
+        );
+
+        this.waitForElementAndClick(
+                MY_LIST_OK_BUTTON,
+                "Cannot find 'OK' button",
+                5
+        );
+
+//        this.waitForElementAndClick(
+//                LATER,
+//                "Cannot find Later button",
+//                5
+//        );
     }
 }
